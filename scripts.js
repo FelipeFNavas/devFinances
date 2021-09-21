@@ -133,6 +133,18 @@ const Utils = {
         
         
        return signal + value;
+    },
+
+    formatAmount(value){
+        value = Number(value) * 100;
+
+        return value;
+    },
+
+    formatDate(date){
+        const splittedDate = date.split("-")
+
+        return `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[0]}`
     }
 }
 
@@ -151,20 +163,37 @@ const Form = {
 
     validateFilds(){
         const { description, amount, date } = Form.getValues();
-        console.log(description);
+
+        if(description.trim() === "" || amount.trim() === "" || date.trim() == ""){
+            throw new Error("Por favor, preencha todos os campos");
+        }
+
+
+
     },
 
-    formatData(){
-        console.log('formata os dados');
+    formatValues(){
+        let { description, amount, date } = Form.getValues();
+
+        amount = Utils.formatAmount(amount);
+
+        date = Utils.formatDate(date);
+
+        return {description, amount, date};
     },
 
 
     submit(event){
         event.preventDefault();
+        try{
+    
+            //Form.validateFilds();
+    
+            Form.formatValues();
 
-        Form.validateFilds();
-
-        Form.formatData();
+        }catch(error){
+            alert(error.message);
+        }
 
     }
 }
